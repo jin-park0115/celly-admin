@@ -73,6 +73,11 @@ const navGroups = [
   },
 ] satisfies NavGroup[];
 
+const labelVisibilityClassName = (isOpen: boolean) =>
+  isOpen
+    ? "opacity-100 translate-x-0 duration-300 delay-0 ease-in-out"
+    : "pointer-events-none opacity-0 -translate-x-2 duration-300 delay-0 ease-in-out";
+
 const RootLayout = () => {
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
@@ -82,63 +87,111 @@ const RootLayout = () => {
 
   return (
     <div className="min-h-screen bg-[#eef2f7] text-slate-900">
-      <div className="grid min-h-screen md:grid-cols-[208px_1fr]">
+      <div
+        className={`grid min-h-screen grid-cols-1 ${
+          isSidebarOpen
+            ? "md:grid-cols-[208px_minmax(0,1fr)]"
+            : "md:grid-cols-[72px_minmax(0,1fr)]"
+        }`}
+      >
         <aside
-          className={`flex-col border-r border-slate-800 bg-[#11141b] px-4 py-5 text-slate-100 ${
-            isSidebarOpen ? "flex" : "hidden"
-          } md:flex`}
+          className={`overflow-hidden bg-[#11141b] text-slate-100 transition-[width] duration-300 ease-in-out ${
+            isSidebarOpen
+              ? "flex w-full border-r border-slate-800 md:w-[208px]"
+              : "hidden w-0 md:flex md:w-[72px] md:border-r md:border-slate-800"
+          }`}
         >
-          <div className="flex items-center gap-3 px-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3b82f6]">
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
-            <strong className="text-xl font-semibold text-white">Celly Admin</strong>
-          </div>
-          <nav className="mt-8 flex flex-col gap-6">
-            {navGroups.map((group, index) => (
-              <div key={`${group.label ?? "main"}-${index}`} className="flex flex-col gap-2">
-                {group.label ? (
-                  <p className="px-2 text-xs font-semibold text-slate-500">{group.label}</p>
-                ) : null}
-                <div className="flex flex-col gap-1">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-
-                    if (item.to) {
-                      return (
-                        <Link
-                          key={item.label}
-                          to={item.to}
-                          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
-                          activeProps={{
-                            className:
-                              "flex items-center gap-3 rounded-xl bg-white/6 px-3 py-3 text-sm font-medium text-white",
-                          }}
-                        >
-                          <Icon className="h-4 w-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      );
-                    }
-
-                    return (
-                      <button
-                        key={item.label}
-                        type="button"
-                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-slate-200"
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+          <div className="flex w-[208px] min-w-[208px] flex-col px-4 py-5">
+            <div className="flex items-center gap-3 px-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3b82f6]">
+                <Building2 className="h-5 w-5 text-white" />
               </div>
-            ))}
-          </nav>
-          <div className="mt-auto px-2 pt-10 text-xs text-slate-500">Celly Admin v1.0</div>
+              <strong
+                className={`overflow-hidden whitespace-nowrap text-xl font-semibold text-white transition-all ${labelVisibilityClassName(
+                  isSidebarOpen,
+                )}`}
+              >
+                Celly Admin
+              </strong>
+            </div>
+            <nav className="mt-8 flex flex-col gap-6">
+              {navGroups.map((group, index) => (
+                <div key={`${group.label ?? "main"}-${index}`} className="flex flex-col gap-2">
+                  {group.label ? (
+                    <p
+                      className={`overflow-hidden px-2 whitespace-nowrap text-xs font-semibold text-slate-500 transition-all ${labelVisibilityClassName(
+                        isSidebarOpen,
+                      )}`}
+                    >
+                      {group.label}
+                    </p>
+                  ) : null}
+                  <div className="flex flex-col gap-1">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      const itemClassName =
+                        "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium";
+
+                      if (item.to) {
+                        return (
+                          <Link
+                            key={item.label}
+                            to={item.to}
+                            title={item.label}
+                            className={`${itemClassName} text-slate-300 transition hover:bg-white/5 hover:text-white`}
+                            activeProps={{
+                              className: `${itemClassName} bg-white/6 text-white`,
+                            }}
+                          >
+                            <Icon className="h-4 w-4 shrink-0" />
+                            <span
+                              className={`overflow-hidden whitespace-nowrap transition-all ${labelVisibilityClassName(
+                                isSidebarOpen,
+                              )}`}
+                            >
+                              {item.label}
+                            </span>
+                          </Link>
+                        );
+                      }
+
+                      return (
+                        <button
+                          key={item.label}
+                          type="button"
+                          title={item.label}
+                          className={`${itemClassName} text-left text-slate-400 transition hover:bg-white/5 hover:text-slate-200`}
+                        >
+                          <Icon className="h-4 w-4 shrink-0" />
+                          <span
+                            className={`overflow-hidden whitespace-nowrap transition-all ${labelVisibilityClassName(
+                              isSidebarOpen,
+                            )}`}
+                          >
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </nav>
+            <div className="mt-auto px-2 pt-10 text-xs text-slate-500">
+              <span
+                className={`overflow-hidden whitespace-nowrap transition-all ${labelVisibilityClassName(
+                  isSidebarOpen,
+                )}`}
+              >
+                Celly Admin v1.0
+              </span>
+              {!isSidebarOpen ? (
+                <span className="flex text-[10px] font-medium text-slate-500">v1.0</span>
+              ) : null}
+            </div>
+          </div>
         </aside>
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen min-w-0 flex-col">
           <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6">
             <div className="flex items-center">
               <button
@@ -214,10 +267,12 @@ const routeTree = rootRoute.addChildren([
   memberEditRoute,
 ]);
 
-export const router = createRouter({ routeTree });
+const routerInstance = createRouter({ routeTree });
+
+export const router = routerInstance;
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router;
+    router: typeof routerInstance;
   }
 }
