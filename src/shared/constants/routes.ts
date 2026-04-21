@@ -1,6 +1,6 @@
 export const ROUTES = {
   dashboard: "/",
   members: "/members",
-  memberDetail: "/members/:memberId",
-  memberEdit: "/members/:memberId/edit",
+  memberDetail: (memberId: string | number) => `/members/${memberId}`,
+  memberEdit: (memberId: string | number) => `/members/${memberId}/edit`,
 } as const;

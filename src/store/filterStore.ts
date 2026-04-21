@@ -1,9 +1,21 @@
-export type FilterState = {
+import { create } from "zustand";
+
+type FilterState = {
   keyword: string;
   status: string;
+  setKeyword: (keyword: string) => void;
+  setStatus: (status: string) => void;
+  reset: () => void;
 };
 
-export const filterStoreInitialState: FilterState = {
+const filterStoreInitialState = {
   keyword: "",
   status: "all",
 };
+
+export const useFilterStore = create<FilterState>((set) => ({
+  ...filterStoreInitialState,
+  setKeyword: (keyword) => set({ keyword }),
+  setStatus: (status) => set({ status }),
+  reset: () => set(filterStoreInitialState),
+}));

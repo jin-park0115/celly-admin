@@ -1,9 +1,26 @@
-export type UiState = {
+import { create } from "zustand";
+
+type UiState = {
   isSidebarOpen: boolean;
   activeModal: string | null;
+  toggleSidebar: () => void;
+  openModal: (modalId: string) => void;
+  closeModal: () => void;
 };
 
-export const uiStoreInitialState: UiState = {
+export const useUiStore = create<UiState>((set) => ({
   isSidebarOpen: true,
   activeModal: null,
-};
+  toggleSidebar: () =>
+    set((state) => ({
+      isSidebarOpen: !state.isSidebarOpen,
+    })),
+  openModal: (modalId) =>
+    set({
+      activeModal: modalId,
+    }),
+  closeModal: () =>
+    set({
+      activeModal: null,
+    }),
+}));
