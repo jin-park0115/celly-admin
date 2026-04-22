@@ -4,6 +4,9 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  redirect,
+  useNavigate,
+  useRouterState,
 } from "@tanstack/react-router";
 import {
   BarChart3,
@@ -17,6 +20,7 @@ import {
   Users,
 } from "lucide-react";
 import DashboardPage from "../pages/DashboardPage";
+import LoginPage from "../pages/login/LoginPage";
 import MemberDetailPage from "../pages/members/MemberDetailPage";
 import MemberEditPage from "../pages/members/MemberEditPage";
 import MembersPage from "../pages/members/MembersPage";
@@ -78,12 +82,37 @@ const labelVisibilityClassName = (isOpen: boolean) =>
     ? "opacity-100 translate-x-0 duration-300 delay-0 ease-in-out"
     : "pointer-events-none opacity-0 -translate-x-2 duration-300 delay-0 ease-in-out";
 
+const requireAuth = () => {
+  if (!useAuthStore.getState().isAuthenticated) {
+    throw redirect({ to: ROUTES.login });
+  }
+};
+
+const redirectIfAuthenticated = () => {
+  if (useAuthStore.getState().isAuthenticated) {
+    throw redirect({ to: ROUTES.dashboard });
+  }
+};
+
 const RootLayout = () => {
+  const navigate = useNavigate();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const loginAsAdmin = useAuthStore((state) => state.loginAsAdmin);
+  const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
+  if (pathname === ROUTES.login) {
+    return <Outlet />;
+  }
+
+  const handleLogout = () => {
+    logout();
+    void navigate({ to: ROUTES.login });
+  };
 
   return (
     <div className="min-h-screen bg-[#eef2f7] text-slate-900">
@@ -213,14 +242,14 @@ const RootLayout = () => {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
                   <Users className="h-4 w-4" />
                 </div>
-                <span className="font-semibold">김목사</span>
+                <span className="font-semibold">{user?.name ?? "관리자"}</span>
               </div>
               <button
                 type="button"
-                onClick={isAuthenticated ? logout : loginAsAdmin}
+                onClick={handleLogout}
                 className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600"
               >
-                {isAuthenticated ? "로그아웃" : "Dev Login"}
+                로그아웃
               </button>
             </div>
           </header>
@@ -239,28 +268,40 @@ const rootRoute = createRootRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
+  beforeLoad: requireAuth,
   component: DashboardPage,
+});
+
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "login",
+  beforeLoad: redirectIfAuthenticated,
+  component: LoginPage,
 });
 
 const membersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "members",
+  beforeLoad: requireAuth,
   component: MembersPage,
 });
 
 const memberDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "members/$memberId",
+  beforeLoad: requireAuth,
   component: MemberDetailPage,
 });
 
 const memberEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "members/$memberId/edit",
+  beforeLoad: requireAuth,
   component: MemberEditPage,
 });
 
 const routeTree = rootRoute.addChildren([
+  loginRoute,
   dashboardRoute,
   membersRoute,
   memberDetailRoute,
