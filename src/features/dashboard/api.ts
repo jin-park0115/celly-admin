@@ -2,7 +2,7 @@ import type { DashboardSummary } from "./types";
 
 export const getDashboardSummary = (): DashboardSummary => {
   return {
-    periodLabel: "2025년 1월 둘째 주",
+    periodLabel: "2026년 4월 20일 - 2026년 4월 26일",
     metrics: [
       {
         label: "총 셀 수",
@@ -32,14 +32,14 @@ export const getDashboardSummary = (): DashboardSummary => {
       },
     ],
     submissionTrend: [
-      { label: "11/25", rate: 77 },
-      { label: "12/2", rate: 80 },
-      { label: "12/9", rate: 85 },
-      { label: "12/16", rate: 82 },
-      { label: "12/23", rate: 79 },
-      { label: "12/30", rate: 83 },
-      { label: "1/6", rate: 81 },
-      { label: "1/13", rate: 78 },
+      { label: "3/2", rate: 77 },
+      { label: "3/9", rate: 80 },
+      { label: "3/16", rate: 85 },
+      { label: "3/23", rate: 82 },
+      { label: "3/30", rate: 79 },
+      { label: "4/6", rate: 83 },
+      { label: "4/13", rate: 81 },
+      { label: "4/20", rate: 78 },
     ],
     cellRates: [
       { name: "모세셀", leader: "김민수", rate: 89, tone: "good" },
