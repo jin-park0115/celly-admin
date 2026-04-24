@@ -167,7 +167,7 @@ const RootLayout = () => {
                             key={item.label}
                             to={item.to}
                             title={item.label}
-                            className={`${itemClassName} text-slate-300 transition hover:bg-white/5 hover:text-white`}
+                            className={`${itemClassName} text-slate-400 transition hover:bg-white/5 hover:text-white`}
                             activeProps={{
                               className: `${itemClassName} bg-white/6 text-white`,
                             }}
