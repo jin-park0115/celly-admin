@@ -20,6 +20,8 @@ import {
   Users,
 } from "lucide-react";
 import DashboardPage from "../pages/DashboardPage";
+import CellNewPage from "../pages/cells/CellNewPage";
+import CellsPage from "../pages/cells/CellsPage";
 import LoginPage from "../pages/login/LoginPage";
 import MemberDetailPage from "../pages/members/MemberDetailPage";
 import MemberEditPage from "../pages/members/MemberEditPage";
@@ -50,7 +52,7 @@ const navGroups = [
   {
     label: "셀 관리",
     items: [
-      { label: "셀 목록", icon: Building2 },
+      { label: "셀 목록", icon: Building2, to: ROUTES.cells },
     ],
   },
   {
@@ -113,6 +115,16 @@ const RootLayout = () => {
     logout();
     void navigate({ to: ROUTES.login });
   };
+  const headerLabel =
+    pathname === ROUTES.dashboard
+      ? "대시보드"
+      : pathname === ROUTES.cells
+        ? "셀 관리 > 셀 목록"
+        : pathname === ROUTES.cellNew
+          ? "셀 관리 > 셀 생성"
+          : pathname.startsWith(ROUTES.members)
+            ? "셀원 관리 > 셀원 목록"
+            : "Celly Admin";
 
   return (
     <div className="min-h-screen bg-[#eef2f7] text-slate-900">
@@ -231,7 +243,7 @@ const RootLayout = () => {
                 <Menu className="h-5 w-5" />
               </button>
               <div className="ml-4 hidden border-l border-slate-200 pl-4 text-sm font-semibold text-slate-700 md:block">
-                대시보드
+                {headerLabel}
               </div>
             </div>
             <div className="flex items-center gap-3 text-sm">
@@ -286,6 +298,20 @@ const membersRoute = createRoute({
   component: MembersPage,
 });
 
+const cellsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "cells",
+  beforeLoad: requireAuth,
+  component: CellsPage,
+});
+
+const cellNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "cells/new",
+  beforeLoad: requireAuth,
+  component: CellNewPage,
+});
+
 const memberDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "members/$memberId",
@@ -303,6 +329,8 @@ const memberEditRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   loginRoute,
   dashboardRoute,
+  cellsRoute,
+  cellNewRoute,
   membersRoute,
   memberDetailRoute,
   memberEditRoute,
