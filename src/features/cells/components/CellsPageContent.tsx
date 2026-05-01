@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Plus, Search } from "lucide-react";
 import { getCells } from "../api";
@@ -26,6 +26,7 @@ const statusClassNameMap: Record<CellStatus, string> = {
 };
 
 export const CellsPageContent = () => {
+  const navigate = useNavigate();
   const { register, watch } = useForm<CellFilters>({
     defaultValues: {
       search: "",
@@ -135,7 +136,8 @@ export const CellsPageContent = () => {
                 {filteredCells.map((cell) => (
                   <tr
                     key={cell.id}
-                    className="border-b border-slate-100 text-slate-700 last:border-b-0"
+                    className="cursor-pointer border-b border-slate-100 text-slate-700 transition hover:bg-slate-50 last:border-b-0"
+                    onClick={() => void navigate({ to: ROUTES.cellDetail(cell.id) })}
                   >
                     <td className="py-[9px] text-center font-semibold text-slate-900">
                       {cell.name}

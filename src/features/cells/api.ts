@@ -1,4 +1,4 @@
-import type { CellItem, UnassignedMember } from "./types";
+import type { CellDetail, CellItem, UnassignedMember } from "./types";
 
 export const getCells = (): CellItem[] => [
   {
@@ -161,3 +161,77 @@ export const getUnassignedMembers = (): UnassignedMember[] => [
     phone: "010-4444-2222",
   },
 ];
+
+export const getCellDetail = (cellId: number): CellDetail => {
+  const details: Record<number, CellDetail> = {
+    1: {
+      id: 1,
+      name: "다윗셀",
+      description: "예배와 말씀, 기도 나눔을 중심으로 운영되는 청년 2부 셀입니다.",
+      department: "청년 2부",
+      year: 2026,
+      status: "ACTIVE",
+      maxMembers: 10,
+      inviteCode: "DAVID85",
+      inviteCodeExpiresAt: "2026-05-15",
+      leader: {
+        name: "박지은",
+        phone: "010-2121-3434",
+      },
+      stats: {
+        averageSubmissionRate: 85,
+        totalPrayerRequests: 23,
+        activePrayerRequests: 7,
+      },
+      members: [
+        {
+          id: 201,
+          name: "박지은",
+          cellRole: "LEADER",
+          phone: "010-2121-3434",
+          joinedAt: "2026-01-12",
+          recentSubmissionWeek: "4월 4주",
+          submissionRate: 96,
+        },
+        {
+          id: 202,
+          name: "김현우",
+          cellRole: "MEMBER",
+          phone: "010-1212-4545",
+          joinedAt: "2026-01-18",
+          recentSubmissionWeek: "4월 4주",
+          submissionRate: 88,
+        },
+        {
+          id: 203,
+          name: "이서영",
+          cellRole: "MEMBER",
+          phone: "010-9876-1111",
+          joinedAt: "2026-02-01",
+          recentSubmissionWeek: "4월 3주",
+          submissionRate: 80,
+        },
+        {
+          id: 204,
+          name: "최민재",
+          cellRole: "MEMBER",
+          phone: "010-7777-2222",
+          joinedAt: "2026-02-08",
+          recentSubmissionWeek: "4월 4주",
+          submissionRate: 74,
+        },
+        {
+          id: 205,
+          name: "정다은",
+          cellRole: "MEMBER",
+          phone: "010-3333-1212",
+          joinedAt: "2026-02-15",
+          recentSubmissionWeek: "4월 2주",
+          submissionRate: 86,
+        },
+      ],
+    },
+  };
+
+  return details[cellId] ?? details[1];
+};

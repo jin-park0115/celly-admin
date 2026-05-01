@@ -21,6 +21,7 @@ import {
   Users,
 } from "lucide-react";
 import DashboardPage from "../pages/DashboardPage";
+import CellDetailPage from "../pages/cells/CellDetailPage";
 import CellNewPage from "../pages/cells/CellNewPage";
 import CellsPage from "../pages/cells/CellsPage";
 import LoginPage from "../pages/login/LoginPage";
@@ -121,6 +122,8 @@ const RootLayout = () => {
       ? "대시보드"
       : pathname === ROUTES.cells
         ? "셀 관리 > 셀 목록"
+        : pathname.startsWith("/cells/") && pathname !== ROUTES.cellNew
+          ? "셀 관리 > 셀 상세"
         : pathname === ROUTES.cellNew
           ? "셀 관리 > 셀 생성"
           : pathname.startsWith(ROUTES.members)
@@ -336,6 +339,13 @@ const cellNewRoute = createRoute({
   component: CellNewPage,
 });
 
+const cellDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "cells/$cellId",
+  beforeLoad: requireAuth,
+  component: CellDetailPage,
+});
+
 const memberDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "members/$memberId",
@@ -355,6 +365,7 @@ const routeTree = rootRoute.addChildren([
   dashboardRoute,
   cellsRoute,
   cellNewRoute,
+  cellDetailRoute,
   membersRoute,
   memberDetailRoute,
   memberEditRoute,
