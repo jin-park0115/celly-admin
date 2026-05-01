@@ -76,7 +76,7 @@ export const CellsPageContent = () => {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-[30px] font-bold tracking-[-0.03em] text-slate-900">
+            <h1 className="text-[22px] font-bold tracking-[-0.03em] text-slate-900">
               셀 관리
             </h1>
           </div>

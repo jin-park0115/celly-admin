@@ -12,6 +12,8 @@ import {
   BarChart3,
   Building2,
   CalendarCheck2,
+  ChevronLeft,
+  PanelLeft,
   LayoutDashboard,
   Menu,
   Megaphone,
@@ -45,15 +47,11 @@ type NavGroup = {
 const navGroups = [
   {
     label: null,
-    items: [
-      { label: "대시보드", icon: LayoutDashboard, to: ROUTES.dashboard },
-    ],
+    items: [{ label: "대시보드", icon: LayoutDashboard, to: ROUTES.dashboard }],
   },
   {
     label: "셀 관리",
-    items: [
-      { label: "셀 목록", icon: Building2, to: ROUTES.cells },
-    ],
+    items: [{ label: "셀 목록", icon: Building2, to: ROUTES.cells }],
   },
   {
     label: "셀원 관리",
@@ -103,6 +101,7 @@ const RootLayout = () => {
   });
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
+  const setSidebarOpen = useUiStore((state) => state.setSidebarOpen);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -114,6 +113,9 @@ const RootLayout = () => {
   const handleLogout = () => {
     logout();
     void navigate({ to: ROUTES.login });
+  };
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
   };
   const headerLabel =
     pathname === ROUTES.dashboard
@@ -128,6 +130,14 @@ const RootLayout = () => {
 
   return (
     <div className="min-h-screen bg-[#eef2f7] text-slate-900">
+      {isSidebarOpen ? (
+        <button
+          type="button"
+          aria-label="사이드바 닫기"
+          onClick={handleSidebarClose}
+          className="fixed inset-0 z-30 bg-slate-950/45 md:hidden"
+        />
+      ) : null}
       <div
         className={`grid min-h-screen grid-cols-1 ${
           isSidebarOpen
@@ -136,28 +146,40 @@ const RootLayout = () => {
         }`}
       >
         <aside
-          className={`overflow-hidden bg-[#11141b] text-slate-100 transition-[width] duration-300 ease-in-out ${
+          className={`fixed inset-y-0 left-0 z-40 overflow-hidden bg-[#11141b] text-slate-100 transition-[transform,width] duration-300 ease-in-out md:static ${
             isSidebarOpen
-              ? "flex w-full border-r border-slate-800 md:w-[208px]"
-              : "hidden w-0 md:flex md:w-[72px] md:border-r md:border-slate-800"
+              ? "flex w-[286px] translate-x-0 border-r border-slate-800 md:w-[208px]"
+              : "flex w-[286px] -translate-x-full border-r border-slate-800 md:w-[72px] md:translate-x-0"
           }`}
         >
-          <div className="flex w-[208px] min-w-[208px] flex-col px-4 py-5">
-            <div className="flex items-center gap-3 px-2">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3b82f6]">
-                <Building2 className="h-5 w-5 text-white" />
+          <div className="flex w-[286px] min-w-[286px] flex-col px-4 py-5 md:w-[208px] md:min-w-[208px]">
+            <div className="flex items-center justify-between gap-3 px-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3b82f6]">
+                  <Building2 className="h-5 w-5 text-white" />
+                </div>
+                <strong
+                  className={`overflow-hidden whitespace-nowrap text-xl font-semibold text-white transition-all ${labelVisibilityClassName(
+                    isSidebarOpen,
+                  )}`}
+                >
+                  Celly Admin
+                </strong>
               </div>
-              <strong
-                className={`overflow-hidden whitespace-nowrap text-xl font-semibold text-white transition-all ${labelVisibilityClassName(
-                  isSidebarOpen,
-                )}`}
+              <button
+                type="button"
+                onClick={handleSidebarClose}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-slate-400 transition hover:bg-white/5 hover:text-white md:hidden"
               >
-                Celly Admin
-              </strong>
+                <ChevronLeft className="h-5 w-5" />
+              </button>
             </div>
             <nav className="mt-8 flex flex-col gap-6">
               {navGroups.map((group, index) => (
-                <div key={`${group.label ?? "main"}-${index}`} className="flex flex-col gap-2">
+                <div
+                  key={`${group.label ?? "main"}-${index}`}
+                  className="flex flex-col gap-2"
+                >
                   {group.label ? (
                     <p
                       className={`overflow-hidden px-2 whitespace-nowrap text-xs font-semibold text-slate-500 transition-all ${labelVisibilityClassName(
@@ -179,6 +201,7 @@ const RootLayout = () => {
                             key={item.label}
                             to={item.to}
                             title={item.label}
+                            onClick={() => setSidebarOpen(false)}
                             className={`${itemClassName} text-slate-400 transition hover:bg-white/5 hover:text-white`}
                             activeProps={{
                               className: `${itemClassName} bg-white/6 text-white`,
@@ -227,7 +250,9 @@ const RootLayout = () => {
                 Celly Admin v1.0
               </span>
               {!isSidebarOpen ? (
-                <span className="flex text-[10px] font-medium text-slate-500">v1.0</span>
+                <span className="flex text-[10px] font-medium text-slate-500">
+                  v1.0
+                </span>
               ) : null}
             </div>
           </div>
@@ -238,9 +263,9 @@ const RootLayout = () => {
               <button
                 type="button"
                 onClick={toggleSidebar}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600"
+                className="inline-flex h-10 w-10 items-center justify-center  text-slate-600"
               >
-                <Menu className="h-5 w-5" />
+                <PanelLeft className="h-5 w-5" />
               </button>
               <div className="ml-4 hidden border-l border-slate-200 pl-4 text-sm font-semibold text-slate-700 md:block">
                 {headerLabel}
