@@ -1,5 +1,13 @@
 export type CellStatus = "ACTIVE" | "ARCHIVED" | "PENDING";
 
+export type UnassignedMember = {
+  id: number;
+  name: string;
+  role: "LEADER" | "MEMBER";
+  department: string;
+  phone: string;
+};
+
 export type CellItem = {
   id: number;
   name: string;

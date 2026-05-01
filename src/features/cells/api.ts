@@ -1,4 +1,4 @@
-import type { CellItem } from "./types";
+import type { CellItem, UnassignedMember } from "./types";
 
 export const getCells = (): CellItem[] => [
   {
@@ -100,5 +100,64 @@ export const getCells = (): CellItem[] => [
     maxMembers: 8,
     submissionRate: null,
     status: "ARCHIVED",
+  },
+];
+
+export const getUnassignedMembers = (): UnassignedMember[] => [
+  {
+    id: 101,
+    name: "김태현",
+    role: "LEADER",
+    department: "청년 1부",
+    phone: "010-1111-2222",
+  },
+  {
+    id: 102,
+    name: "최서진",
+    role: "LEADER",
+    department: "청년 2부",
+    phone: "010-1111-3333",
+  },
+  {
+    id: 103,
+    name: "윤지후",
+    role: "MEMBER",
+    department: "청년 1부",
+    phone: "010-2222-1111",
+  },
+  {
+    id: 104,
+    name: "박나연",
+    role: "MEMBER",
+    department: "청년 2부",
+    phone: "010-2222-3333",
+  },
+  {
+    id: 105,
+    name: "이도경",
+    role: "MEMBER",
+    department: "청년 2부",
+    phone: "010-3333-1111",
+  },
+  {
+    id: 106,
+    name: "정하민",
+    role: "MEMBER",
+    department: "대학부",
+    phone: "010-3333-2222",
+  },
+  {
+    id: 107,
+    name: "송유진",
+    role: "MEMBER",
+    department: "대학부",
+    phone: "010-4444-1111",
+  },
+  {
+    id: 108,
+    name: "한예준",
+    role: "MEMBER",
+    department: "청년 1부",
+    phone: "010-4444-2222",
   },
 ];

@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   PanelLeft,
   LayoutDashboard,
-  Menu,
   Megaphone,
   Settings,
   ShieldCheck,
